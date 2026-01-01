@@ -1,2 +1,70 @@
-# augmenta-governance-shield
-Enterprise Data Security &amp; Access Orchestration
+# 🛡️ Augmenta Governance Shield
+
+![Status](https://img.shields.io/badge/Status-Active-success)
+![Platform](https://img.shields.io/badge/Platform-Azure%20Synapse%20%7C%20Databricks-blue)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+**Automated Data Governance & Zero-Trust Security Orchestration**
+
+---
+
+### 🚀 Overview
+**Augmenta Governance Shield** is a multi-modal security suite designed for enterprise data platforms. It transforms security from a manual, ticket-based process into an automated, metadata-driven architecture.
+
+This repository demonstrates **Augmenta Systems'** approach to "Zero-Trust Handoff": implementing robust security frameworks that persist securely even after consultant access is revoked.
+
+### 🏗️ Architecture
+
+#### **Module 1: Metadata-Driven Security Framework (Azure Synapse)**
+*A scalable RLS engine that decouples security policies from codebase deployment.*
+* **Problem:** Traditional RLS requires code changes (DDL) every time a new user group needs access.
+* **Solution:** A control-plane table maps AD Groups to Data Domains (e.g., Regions, Returns, Departments). The security policy reads this table dynamically.
+* **Result:** Granting access is a simple `INSERT` statement; no database locks or downtime required.
+
+#### **Module 2: Custom Security Orchestrator (Databricks)**
+*A configuration-driven Python framework for automating Object-Level Security (OLS).*
+* **Problem:** Early Unity Catalog adoptions often lacked granular automated OLS for complex views.
+* **Solution:** An idempotent Python orchestrator that reads a "Desired State" CSV and enforces permissions across Dev, Test, and Prod environments.
+* **Self-Healing:** Automatically detects and repairs permission drift during pipeline runs.
+
+#### **Module 3: Native RLS & Column Masking (Databricks Unity Catalog)**
+*The modern "Golden Path" implementation using native SQL standards.*
+* **Problem:** Compliance often requires hiding specific rows (horizontal) or masking PII columns (vertical) dynamically based on user attributes.
+* **Solution:** Leverages Unity Catalog's native `ROW FILTER` and `COLUMN MASK` features, bound to a secured access matrix.
+* **Result:** Zero-latency enforcement pushed down to the query engine.
+
+---
+
+### 📈 Evolution Strategy: From Orchestration to Native Governance
+*How Augmenta guides clients through platform maturity.*
+
+| Feature | Custom Orchestrator (Module 2) | Native UC RLS (Module 3) |
+| :--- | :--- | :--- |
+| **Granularity** | Object-Level (Table/View) | Row & Column Level |
+| **Performance** | High (Standard ACLs) | Optimized (Predicate Pushdown) |
+| **Maintenance** | Python Script (External) | SQL Metadata (Internal) |
+| **Auditability**| Git Config History | System Tables & Lineage |
+
+---
+
+### 📂 Repository Structure
+
+```text
+augmenta-governance-shield/
+├── 📘 synapse-metadata-framework/    # Metadata-Driven RLS (Synapse)
+│   ├── 01_security_matrix_ddl.sql    # The Control Plane
+│   └── 02_policy_engine.sql          # The Security Predicate Logic
+│
+├── 📙 databricks-ols-orchestrator/   # Security Orchestrator (Python)
+│   ├── orchestrator_engine.py        # The Automation Script
+│   └── config_definitions/
+│       └── access_control_list.csv   # The "Desired State" Config
+│
+└── 📗 databricks-native-rls/         # Modern Unity Catalog RLS
+    ├── 01_access_matrix_setup.sql    # The Control Plane
+    ├── 02_security_functions.sql     # The Logic Engine
+    └── 03_apply_policies.sql         # Enforcement
+```
+
+### 🤝 Contact
+**Augmenta Systems** Specializing in Azure Data Engineering & Secure Cloud Architecture.

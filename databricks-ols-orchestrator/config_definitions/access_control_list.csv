@@ -1,0 +1,5 @@
+uc_object,user_ad_group,description
+{env}_cat.gold_db.fact_transactions,sg_finance_analytics,Finance Team Access
+{env}_cat.gold_db.dim_customers,sg_marketing_read,Marketing Read Access
+{env}_cat.silver_db.staging_geo,sg_data_engineers,Engineering Write Access
+{env}_cat.views_db.v_executive_summary,sg_exec_leadership,C-Suite View Access
