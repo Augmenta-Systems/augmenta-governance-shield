@@ -9,7 +9,7 @@
 ---
 
 ### 🚀 Overview
-**Augmenta Governance Shield** is a dual-engine security suite designed for enterprise data platforms. It transforms security from a manual, ticket-based process into an automated, metadata-driven architecture.
+**Augmenta Governance Shield** is a multi-modal security suite designed for enterprise data platforms. It transforms security from a manual, ticket-based process into an automated, metadata-driven architecture.
 
 This repository demonstrates **Augmenta Systems'** approach to "Zero-Trust Handoff": implementing robust security frameworks that persist securely even after consultant access is revoked.
 
@@ -27,6 +27,24 @@ This repository demonstrates **Augmenta Systems'** approach to "Zero-Trust Hando
 * **Solution:** An idempotent Python orchestrator that reads a "Desired State" CSV and enforces permissions across Dev, Test, and Prod environments.
 * **Self-Healing:** Automatically detects and repairs permission drift during pipeline runs.
 
+#### **Module 3: Native RLS & Column Masking (Databricks Unity Catalog)**
+*The modern "Golden Path" implementation using native SQL standards.*
+* **Problem:** Compliance often requires hiding specific rows (horizontal) or masking PII columns (vertical) dynamically based on user attributes.
+* **Solution:** Leverages Unity Catalog's native `ROW FILTER` and `COLUMN MASK` features, bound to a secured access matrix.
+* **Result:** Zero-latency enforcement pushed down to the query engine.
+
+---
+
+### 📈 Evolution Strategy: From Orchestration to Native Governance
+*How Augmenta guides clients through platform maturity.*
+
+| Feature | Custom Orchestrator (Module 2) | Native UC RLS (Module 3) |
+| :--- | :--- | :--- |
+| **Granularity** | Object-Level (Table/View) | Row & Column Level |
+| **Performance** | High (Standard ACLs) | Optimized (Predicate Pushdown) |
+| **Maintenance** | Python Script (External) | SQL Metadata (Internal) |
+| **Auditability**| Git Config History | System Tables & Lineage |
+
 ---
 
 ### 📂 Repository Structure
@@ -43,7 +61,9 @@ augmenta-governance-shield/
 │       └── access_control_list.csv   # The "Desired State" Config
 │
 └── 📗 databricks-native-rls/         # Modern Unity Catalog RLS
-    └── native_row_filters.sql        # Future-state implementation
+    ├── 01_access_matrix_setup.sql    # The Control Plane
+    ├── 02_security_functions.sql     # The Logic Engine
+    └── 03_apply_policies.sql         # Enforcement
 ```
 
 ### 🤝 Contact
