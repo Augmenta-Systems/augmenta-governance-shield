@@ -1,31 +1,47 @@
 /*
-    AUGMENTA SYSTEMS - NATIVE UC RLS
-    Script: 02_security_functions.sql
-    Description: SQL User Defined Functions (UDFs) that return Boolean logic for access.
+    AUGMENTA TRIPLE-LOCK SECURITY FUNCTION
+    Inputs:
+      - region_col: For Identity Lock (Role based)
+      - quality_col: For Integrity Lock (Math based)
+      - conf_col: For Confidentiality Lock (Dominance based)
 */
-
--- Function 1: Region-Based Row Filter
--- Logic: Return TRUE if user is Admin OR if user belongs to a group mapped to the specific region.
-CREATE OR REPLACE FUNCTION main.augmenta_gov.fn_filter_by_region(region_col STRING)
+CREATE OR REPLACE FUNCTION main.augmenta_gov.fn_triple_lock(
+    region_col STRING, 
+    quality_col STRING, 
+    conf_col STRING
+)
 RETURN 
-    -- Optimization: Admin Bypass
+    -- ---------------------------------------------------------
+    -- 1. ADMIN BYPASS (The "God Mode" Key)
+    -- ---------------------------------------------------------
     is_account_group_member('sg_platform_admins') 
+    OR 
+    is_account_group_member('sp_global_aggregator_service') -- Crucial for World Calculations
     OR
-    -- Lookup in Matrix
-    EXISTS (
-        SELECT 1 
-        FROM main.augmenta_gov.auth_matrix m
-        WHERE 
-            is_account_group_member(m.user_group) 
-            AND 
-            (m.allowed_value = region_col OR m.allowed_value = 'ALL')
+    (
+        -- -----------------------------------------------------
+        -- LOCK 1: IDENTITY (Can I see this region?)
+        -- -----------------------------------------------------
+        EXISTS (
+            SELECT 1 FROM main.augmenta_gov.auth_matrix m
+            WHERE is_account_group_member(m.user_group) 
+            AND (m.allowed_value = region_col OR m.allowed_value = 'ALL')
+        )
+        AND
+        -- -----------------------------------------------------
+        -- LOCK 2: INTEGRITY (Is the data valid?)
+        -- -----------------------------------------------------
+        (
+            quality_col = 'PASS' 
+            OR is_account_group_member('sg_data_fixers') -- Only fixers see broken data
+        )
+        AND
+        -- -----------------------------------------------------
+        -- LOCK 3: CONFIDENTIALITY (Is it free to publish?)
+        -- -----------------------------------------------------
+        (
+            conf_col = 'F' 
+            OR is_account_group_member('sg_internal_analysts') -- Internal users can see 'N'
+            -- Public users (default) are blocked if 'N'
+        )
     );
-
--- Function 2: PII Column Masking
--- Logic: Return the raw value for authorized groups, otherwise return a redacted string.
-CREATE OR REPLACE FUNCTION main.augmenta_gov.fn_mask_pii(col_value STRING)
-RETURN CASE 
-    WHEN is_account_group_member('sg_hr_managers') THEN col_value
-    WHEN is_account_group_member('sg_compliance_auditors') THEN col_value
-    ELSE '***-***-****' -- Redacted for everyone else
-END;
