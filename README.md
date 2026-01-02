@@ -1,4 +1,4 @@
-# 🛡️ $\Lambda$ugmenta Sovereign Governance Shield
+# 🛡️ Λugmenta Sovereign Governance Shield
 
 ![Status](https://img.shields.io/badge/Status-Active-success)
 ![Architecture](https://img.shields.io/badge/Architecture-Triple--Lock-blue)
