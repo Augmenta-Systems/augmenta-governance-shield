@@ -1,49 +1,52 @@
-# 🛡️ Augmenta Governance Shield
+# 🛡️ $\Lambda$ugmenta Sovereign Governance Shield
 
 ![Status](https://img.shields.io/badge/Status-Active-success)
-![Platform](https://img.shields.io/badge/Platform-Azure%20Synapse%20%7C%20Databricks-blue)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Architecture](https://img.shields.io/badge/Architecture-Triple--Lock-blue)
+![Platform](https://img.shields.io/badge/Platform-Databricks%20Unity%20Catalog%20%7C%20Azure-orange)
 
-**Automated Data Governance & Zero-Trust Security Orchestration**
+**The "Triple-Lock" Governance Framework for Sovereign Financial Data.**
 
 ---
 
 ### 🚀 Overview
-**Augmenta Governance Shield** is a multi-modal security suite designed for enterprise data platforms. It transforms security from a manual, ticket-based process into an automated, metadata-driven architecture.
+**Augmenta Sovereign Shield** is not just an access control list; it is a **context-aware governance engine**. It moves beyond simple "Who are you?" checks to answer three critical questions before granting access to a single cell of data:
 
-This repository demonstrates **Augmenta Systems'** approach to "Zero-Trust Handoff": implementing robust security frameworks that persist securely even after consultant access is revoked.
+1.  **Identity:** Are you authorized?
+2.  **Integrity:** Is the data mathematically valid?
+3.  **Confidentiality:** Is the data statistically free to publish?
 
-### 🏗️ Architecture
-
-#### **Module 1: Metadata-Driven Security Framework (Azure Synapse)**
-*A scalable RLS engine that decouples security policies from codebase deployment.*
-* **Problem:** Traditional RLS requires code changes (DDL) every time a new user group needs access.
-* **Solution:** A control-plane table maps AD Groups to Data Domains (e.g., Regions, Returns, Departments). The security policy reads this table dynamically.
-* **Result:** Granting access is a simple `INSERT` statement; no database locks or downtime required.
-
-#### **Module 2: Custom Security Orchestrator (Databricks)**
-*A configuration-driven Python framework for automating Object-Level Security (OLS).*
-* **Problem:** Early Unity Catalog adoptions often lacked granular automated OLS for complex views.
-* **Solution:** An idempotent Python orchestrator that reads a "Desired State" CSV and enforces permissions across Dev, Test, and Prod environments.
-* **Self-Healing:** Automatically detects and repairs permission drift during pipeline runs.
-
-#### **Module 3: Native RLS & Column Masking (Databricks Unity Catalog)**
-*The modern "Golden Path" implementation using native SQL standards.*
-* **Problem:** Compliance often requires hiding specific rows (horizontal) or masking PII columns (vertical) dynamically based on user attributes.
-* **Solution:** Leverages Unity Catalog's native `ROW FILTER` and `COLUMN MASK` features, bound to a secured access matrix.
-* **Result:** Zero-latency enforcement pushed down to the query engine.
+This repository contains the **Infrastructure-as-Code (IaC)** to deploy these gates on Databricks Unity Catalog and Azure Synapse, enforcing a "Zero-Trust Handoff" between external consultants and internal sovereign data owners.
 
 ---
 
-### 📈 Evolution Strategy: From Orchestration to Native Governance
-*How Augmenta guides clients through platform maturity.*
+### 🔐 The Triple-Lock Architecture
 
-| Feature | Custom Orchestrator (Module 2) | Native UC RLS (Module 3) |
+We enforce security at the **Row Level** using a simultaneous three-key turn:
+
+| Lock | Question | Logic Enforced |
 | :--- | :--- | :--- |
-| **Granularity** | Object-Level (Table/View) | Row & Column Level |
-| **Performance** | High (Standard ACLs) | Optimized (Predicate Pushdown) |
-| **Maintenance** | Python Script (External) | SQL Metadata (Internal) |
-| **Auditability**| Git Config History | System Tables & Lineage |
+| **1. Identity Lock** 👤 | *Who are you?* | Standard RBAC (Role-Based Access Control). e.g., "Only `Region_NA` users see North America." |
+| **2. Integrity Lock** 📐 | *Is the math right?* | **Quality-Aware Access.** Rows that fail the $B=I+J+M$ identity check are hidden from economists to prevent "bad math" analysis, but visible to Data Engineers for fixing. |
+| **3. Confidentiality Lock** 👁️ | *Is it too revealing?* | **Dominance-Aware Access.** Implementation of the "Dominance Rule" (e.g., if one bank holds >60% of a country's assets). The system automatically redacts the country detail while allowing the World Total to remain visible. |
+
+---
+
+### 🎤 The "Sovereign Demo" (Sales Pitch)
+*How we solve the "Aggregation vs. Privacy" Paradox.*
+
+Run the notebook `notebooks/Demo_Sovereign_Shield.py` to demonstrate the following narrative to stakeholders:
+
+> **Scene 1: The Liability**
+> "Everyone can store data. But look at this 'Canada' row. Bank A holds 90% of the assets. If we publish this row, we reveal Bank A's proprietary position. That is illegal under statistical confidentiality laws."
+>
+> **Scene 2: The Judgment**
+> "Our pipeline doesn't just copy data; it **judges** it. The Shield automatically detects that Bank A has 90% dominance. It tags the row as `Status: N` (Not Free) immediately during ingestion."
+>
+> **Scene 3: The Public User (The Climax)**
+> "Here is the magic. A Public Analyst queries the dataset. They see the **World Total** (which includes Canada). They get the global insight they need. But if they look for **Canada**, it's gone. We protected the bank *and* served the public in the same query."
+>
+> **Scene 4: The Sovereign Owner**
+> "And of course, you (the Internal Auditor) see everything. The data isn't deleted; it's Sovereign."
 
 ---
 
@@ -51,20 +54,27 @@ This repository demonstrates **Augmenta Systems'** approach to "Zero-Trust Hando
 
 ```text
 augmenta-governance-shield/
-├── 📘 synapse-metadata-framework/    # Metadata-Driven RLS (Synapse)
-│   ├── 01_security_matrix_ddl.sql    # The Control Plane
-│   └── 02_policy_engine.sql          # The Security Predicate Logic
+├── 📓 notebooks/
+│   └── Demo_Sovereign_Shield.py     # The "Money Demo" showing the Triple-Lock in action
 │
-├── 📙 databricks-ols-orchestrator/   # Security Orchestrator (Python)
-│   ├── orchestrator_engine.py        # The Automation Script
-│   └── config_definitions/
-│       └── access_control_list.csv   # The "Desired State" Config
+├── 📜 policies/
+│   ├── triple_lock.py               # The Master Security Function (UDF)
+│   ├── definitions.yaml             # Config for Embargo times and Confidentiality thresholds
+│   └── legacy/                      # (Archived) Synapse T-SQL policies
 │
-└── 📗 databricks-native-rls/         # Modern Unity Catalog RLS
-    ├── 01_access_matrix_setup.sql    # The Control Plane
-    ├── 02_security_functions.sql     # The Logic Engine
-    └── 03_apply_policies.sql         # Enforcement
+├── 🔌 src/
+│   ├── enrichment_pipeline.py       # Bridge script: Calls the Validator to tag data
+│   └── apply_tags.py                # Automated tagging based on definitions
+│
+└── 🛠️ databricks-native-rls/        # SQL Deployment Scripts
+    ├── 01_access_matrix_setup.sql   # The Control Plane
+    ├── 02_security_functions.sql    # The Triple-Lock Logic Implementation
+    └── 03_apply_policies.sql        # Binding logic to tables
 ```
+### 🤝 Dependencies
+This framework acts as the **Enforcement Layer**. It relies on the **Logic Layer** provided by:
 
-### 🤝 Contact
-**Augmenta Systems** Specializing in Azure Data Engineering & Secure Cloud Architecture.
+_universal-ibs-validator_ (Handles the Math & Dominance algorithms)
+
+### 📞 Contact
+**Augmenta Systems** Sovereign Data Architecture & Regulatory Modernization.
